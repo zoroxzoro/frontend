@@ -1,0 +1,73 @@
+/* NotFound.css */
+.notfound-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    padding: 20px;
+    background-color: #f0f0f0;
+    font-family: Arial, sans-serif;
+  }
+  
+  .notfound-content {
+    text-align: center;
+  }
+  
+  .notfound-title {
+    font-size: 10rem;
+    margin: 0;
+    color: #ff6b6b;
+  }
+  
+  .notfound-message {
+    font-size: 1.5rem;
+    color: #333;
+  }
+  
+  .notfound-link {
+    display: inline-block;
+    margin-top: 20px;
+    padding: 10px 20px;
+    font-size: 1rem;
+    color: #fff;
+    background-color: #ff6b6b;
+    border-radius: 5px;
+    text-decoration: none;
+    transition: background-color 0.3s ease;
+  }
+  
+  .notfound-link:hover {
+    background-color: #ff4c4c;
+  }
+  
+  /* Media Queries for Responsiveness */
+  @media (max-width: 768px) {
+    .notfound-title {
+      font-size: 6rem;
+    }
+  
+    .notfound-message {
+      font-size: 1.2rem;
+    }
+  
+    .notfound-link {
+      font-size: 0.9rem;
+      padding: 8px 16px;
+    }
+  }
+  
+  @media (max-width: 480px) {
+    .notfound-title {
+      font-size: 4rem;
+    }
+  
+    .notfound-message {
+      font-size: 1rem;
+    }
+  
+    .notfound-link {
+      font-size: 0.8rem;
+      padding: 6px 12px;
+    }
+  }
+  
