@@ -1,5 +1,5 @@
 import { FaPlus } from "react-icons/fa";
-import { CartItem } from "../types/types";
+import { cartItem } from "../types/types";
 
 type ProductsProps = {
   productId: string;
@@ -7,7 +7,7 @@ type ProductsProps = {
   name: string;
   price: number;
   stock: number;
-  handler: (cartItem: CartItem) => string | undefined;
+  handler: (cartItem: cartItem) => string | undefined;
 };
 
 export const serverr = "https://backend-ohbv.onrender.com/";

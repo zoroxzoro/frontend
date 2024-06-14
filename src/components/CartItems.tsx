@@ -1,13 +1,13 @@
 import { Link } from "react-router-dom";
 import { FaTrash } from "react-icons/fa";
 
-import { CartItem } from "../types/types";
+import { cartItem } from "../types/types";
 import { serverr } from "./ProductCard";
 
 type CartItemProps = {
-  cartItem: CartItem;
-  incrementHandler: (cartItem: CartItem) => void;
-  decrementHandler: (cartItem: CartItem) => void;
+  cartItem: cartItem;
+  incrementHandler: (cartItem: cartItem) => void;
+  decrementHandler: (cartItem: cartItem) => void;
   removeHandler: (id: string) => void;
 };
 

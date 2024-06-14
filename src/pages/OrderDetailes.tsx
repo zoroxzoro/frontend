@@ -1,5 +1,3 @@
-import React from "react";
-
 const OrderDetailes = () => {
   return <div>OrderDetailes</div>;
 };

@@ -12,8 +12,8 @@ import { Navigate } from "react-router-dom";
 
 const Login = () => {
   const dispatch = useDispatch();
-  const [gender, setGender] = useState("");
-  const [date, setDate] = useState("");
+  const [gender, setGender] = useState<string>(""); // Ensure gender is typed as string
+  const [date, setDate] = useState<string>(""); // Ensure date is typed as string
 
   const [login] = useLoginMutation();
 
@@ -43,17 +43,20 @@ const Login = () => {
       });
 
       if ("data" in res) {
-        toast.success(res.data.message);
+        toast.success("Success");
         const data = await getUser(user.uid);
-      <Navigate to={"/"}/>
         dispatch(userExist(data?.user!));
+        // Use Navigate component to redirect
+        return <Navigate to={"/"} />;
       } else {
         const error = res.error as FetchBaseQueryError;
-        const message = (error.data as MessageResponse).message;
+        const message =
+          (error.data as MessageResponse)?.message || "Unknown error";
         toast.error(message);
         dispatch(userNotExist());
       }
     } catch (error) {
+      console.error("Sign In Fail", error);
       toast.error("Sign In Fail");
     }
   };

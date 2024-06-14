@@ -1,4 +1,4 @@
-import { ReactElement, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { FaPlus } from "react-icons/fa";
 import { Link } from "react-router-dom";
 import { Column } from "react-table";
@@ -13,11 +13,11 @@ import { serverr } from "../../components/ProductCard";
 import Loader from "../../components/Loader";
 
 interface DataType {
-  photo: ReactElement;
+  photo: React.ReactElement;
   name: string;
   price: number;
   stock: number;
-  action: ReactElement;
+  action: React.ReactElement;
 }
 
 const columns: Column<DataType>[] = [
@@ -44,14 +44,17 @@ const columns: Column<DataType>[] = [
 ];
 
 const Products = () => {
-  const [rows, setRows] = useState<DataType[]>([]);
+  const [data, setData] = useState<DataType[]>([]);
   const { user } = useSelector(
     (state: { userReducer: UserReducerInitialState }) => state.userReducer
   );
 
-  const { isLoading, isError, error, data } = useAllProductQuery(
-    user?._id || ""
-  );
+  const {
+    isLoading,
+    isError,
+    error,
+    data: queryData,
+  } = useAllProductQuery(user?._id || "");
 
   if (isError) {
     const err = error as CustomError;
@@ -59,25 +62,28 @@ const Products = () => {
   }
 
   useEffect(() => {
-    if (data)
-      setRows(
-        data.products.map((i) => ({
-          photo: <img src={`${serverr}${i.photo}`} />,
+    if (queryData) {
+      setData(
+        queryData.products.map((i) => ({
+          photo: <img src={`${serverr}${i.photo}`} alt={i.name} />,
           name: i.name,
           price: i.price,
           stock: i.stock,
           action: <Link to={`/admin/product/${i._id}`}>Manage</Link>,
         }))
       );
-  }, [data]);
+    }
+  }, [queryData]);
 
-  const Table = TableHOC<DataType>(
-    columns,
-    rows,
-    "dashboard-product-box",
-    "Products",
-    rows.length > 6
-  )();
+  const Table = (
+    <TableHOC<DataType>
+      columns={columns}
+      data={data}
+      containerClassName="dashboard-product-box"
+      heading="Products"
+      showPagination={data.length > 6}
+    />
+  );
 
   return (
     <div className="admin-container">

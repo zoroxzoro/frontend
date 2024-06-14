@@ -25,7 +25,7 @@ export type ShippingInfo = {
   pinCode: string;
 };
 
-export type CartItem = {
+export type cartItem = {
   productId: string;
   photo: string;
   name: string;
@@ -33,7 +33,7 @@ export type CartItem = {
   quantity: number;
   stock: number;
 };
-export type OrderItem = Omit<CartItem, "stock"> & { _id: string };
+export type OrderItem = Omit<cartItem, "stock"> & { _id: string };
 
 export type Order = {
   orderItems: OrderItem[];

@@ -18,7 +18,7 @@ const Productmanagement = () => {
     (state: { userReducer: UserReducerInitialState }) => state.userReducer
   );
 
-  const params = useParams();
+  const params = useParams<{ id: string }>();
   const navigate = useNavigate();
 
   const { data, isLoading, isError } = useProductDetailesQuery(params.id!);
@@ -69,10 +69,11 @@ const Productmanagement = () => {
     if (photoFile) formData.set("photo", photoFile);
     if (categoryUpdate) formData.set("category", categoryUpdate);
 
+    // Ensure userId and productId are defined and convert them to strings if possible
     const res = await updateProduct({
       formData,
-      userId: user?._id,
-      productId: data?.product._id,
+      userId: user?._id ?? "", // Provide a default empty string if user._id is undefined
+      productId: data?.product?._id ?? "", // Provide a default empty string if product._id is undefined
     });
 
     responseToast(res, navigate, "/admin/product");
@@ -80,8 +81,8 @@ const Productmanagement = () => {
 
   const deleteHandler = async () => {
     const res = await deleteProduct({
-      userId: user?._id!,
-      productId: data?.product._id!,
+      userId: user?._id ?? "",
+      productId: data?.product?._id ?? "",
     });
 
     responseToast(res, navigate, "/admin/product");

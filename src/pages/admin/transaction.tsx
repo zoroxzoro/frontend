@@ -88,14 +88,16 @@ const Transaction = () => {
     }
   }, [data]);
 
-  const Table = TableHOC<DataType>(
-    columns,
-    rows,
-
-    "dashboard-product-box",
-    "Transactions",
-    rows.length > 6
-  )();
+  // Adjusted TableHOC invocation: pass props as an object
+  const Table = (
+    <TableHOC<DataType>
+      columns={columns}
+      data={rows} // Use 'rows' instead of 'data'
+      containerClassName="dashboard-product-box"
+      heading="Transactions"
+      showPagination={rows.length > 6}
+    />
+  );
 
   return (
     <div className="admin-container">
