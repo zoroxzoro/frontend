@@ -1,12 +1,12 @@
 import { ReactElement, useEffect, useState } from "react";
+import toast from "react-hot-toast";
+import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import { Column } from "react-table";
 import AdminSidebar from "../../components/admin/AdminSidebar";
 import TableHOC from "../../components/admin/TableHOC";
-import { useSelector } from "react-redux";
-import { UserReducerInitialState } from "../../types/Reducer.types";
 import { useAllOrderQuery } from "../../redux/api/orderApi";
-import toast from "react-hot-toast";
+import { RootState } from "../../redux/store";
 import { CustomError } from "../../types/api-types";
 import Loader from "../../components/Loader";
 
@@ -47,58 +47,50 @@ const columns: Column<DataType>[] = [
 ];
 
 const Transaction = () => {
-  const { user } = useSelector(
-    (state: { userReducer: UserReducerInitialState }) => state.userReducer
-  );
+  const { user } = useSelector((state: RootState) => state.userReducer);
 
-  const { isLoading, isError, data, error } = useAllOrderQuery(user?._id!);
+  const { isLoading, data, isError, error } = useAllOrderQuery(user?._id!);
+
   const [rows, setRows] = useState<DataType[]>([]);
 
-  useEffect(() => {
-    if (isError) {
-      const err = error as CustomError;
-      toast.error(err.data.message);
-    }
-  }, [isError, error]);
+  if (isError) {
+    const err = error as CustomError;
+    toast.error(err.data.message);
+  }
 
   useEffect(() => {
-    if (data) {
+    if (data)
       setRows(
         data.orders.map((i) => ({
           user: i.user.name,
           amount: i.total,
+          discount: i.discount,
           quantity: i.orderItems.length,
-          action: <Link to={`/admin/transaction/${i._id}`}>Manage</Link>,
           status: (
             <span
               className={
                 i.status === "Processing"
                   ? "red"
                   : i.status === "Shipped"
-                  ? "purple"
-                  : "green"
+                  ? "green"
+                  : "purple"
               }
             >
               {i.status}
             </span>
           ),
-          discount: i.discount,
+          action: <Link to={`/admin/transaction/${i._id}`}>Manage</Link>,
         }))
       );
-    }
   }, [data]);
 
-  // Adjusted TableHOC invocation: pass props as an object
-  const Table = (
-    <TableHOC<DataType>
-      columns={columns}
-      data={rows} // Use 'rows' instead of 'data'
-      containerClassName="dashboard-product-box"
-      heading="Transactions"
-      showPagination={rows.length > 6}
-    />
-  );
-
+  const Table = TableHOC<DataType>(
+    columns,
+    rows,
+    "dashboard-product-box",
+    "Transactions",
+    rows.length > 6
+  )();
   return (
     <div className="admin-container">
       <AdminSidebar />

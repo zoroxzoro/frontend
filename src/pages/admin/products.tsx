@@ -1,23 +1,22 @@
-import React, { useEffect, useState } from "react";
+import { ReactElement, useEffect, useState } from "react";
+import toast from "react-hot-toast";
 import { FaPlus } from "react-icons/fa";
+import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import { Column } from "react-table";
 import AdminSidebar from "../../components/admin/AdminSidebar";
 import TableHOC from "../../components/admin/TableHOC";
-import { useSelector } from "react-redux";
-import { UserReducerInitialState } from "../../types/Reducer.types";
 import { useAllProductQuery } from "../../redux/api/ProductApi";
+import { RootState, server } from "../../redux/store";
 import { CustomError } from "../../types/api-types";
-import toast from "react-hot-toast";
-import { serverr } from "../../components/ProductCard";
 import Loader from "../../components/Loader";
 
 interface DataType {
-  photo: React.ReactElement;
+  photo: ReactElement;
   name: string;
   price: number;
   stock: number;
-  action: React.ReactElement;
+  action: ReactElement;
 }
 
 const columns: Column<DataType>[] = [
@@ -44,17 +43,11 @@ const columns: Column<DataType>[] = [
 ];
 
 const Products = () => {
-  const [data, setData] = useState<DataType[]>([]);
-  const { user } = useSelector(
-    (state: { userReducer: UserReducerInitialState }) => state.userReducer
-  );
+  const { user } = useSelector((state: RootState) => state.userReducer);
 
-  const {
-    isLoading,
-    isError,
-    error,
-    data: queryData,
-  } = useAllProductQuery(user?._id || "");
+  const { isLoading, isError, error, data } = useAllProductQuery(user?._id!);
+
+  const [rows, setRows] = useState<DataType[]>([]);
 
   if (isError) {
     const err = error as CustomError;
@@ -62,28 +55,25 @@ const Products = () => {
   }
 
   useEffect(() => {
-    if (queryData) {
-      setData(
-        queryData.products.map((i) => ({
-          photo: <img src={`${serverr}${i.photo}`} alt={i.name} />,
+    if (data)
+      setRows(
+        data.products.map((i) => ({
+          photo: <img src={`${server}/${i.photo}`} />,
           name: i.name,
           price: i.price,
           stock: i.stock,
           action: <Link to={`/admin/product/${i._id}`}>Manage</Link>,
         }))
       );
-    }
-  }, [queryData]);
+  }, [data]);
 
-  const Table = (
-    <TableHOC<DataType>
-      columns={columns}
-      data={data}
-      containerClassName="dashboard-product-box"
-      heading="Products"
-      showPagination={data.length > 6}
-    />
-  );
+  const Table = TableHOC<DataType>(
+    columns,
+    rows,
+    "dashboard-product-box",
+    "Products",
+    rows.length > 6
+  )();
 
   return (
     <div className="admin-container">
