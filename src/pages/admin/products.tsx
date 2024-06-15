@@ -7,7 +7,7 @@ import { Column } from "react-table";
 import AdminSidebar from "../../components/admin/AdminSidebar";
 import TableHOC from "../../components/admin/TableHOC";
 import { useAllProductQuery } from "../../redux/api/ProductApi";
-import { RootState, server } from "../../redux/store";
+import { RootState } from "../../redux/store";
 import { CustomError } from "../../types/api-types";
 import Loader from "../../components/Loader";
 import { serverr } from "../../components/ProductCard";
