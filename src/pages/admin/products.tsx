@@ -10,6 +10,7 @@ import { useAllProductQuery } from "../../redux/api/ProductApi";
 import { RootState, server } from "../../redux/store";
 import { CustomError } from "../../types/api-types";
 import Loader from "../../components/Loader";
+import { serverr } from "../../components/ProductCard";
 
 interface DataType {
   photo: ReactElement;
@@ -58,7 +59,7 @@ const Products = () => {
     if (data)
       setRows(
         data.products.map((i) => ({
-          photo: <img src={`${server}/${i.photo}`} />,
+          photo: <img src={`${serverr}${i.photo}`} />,
           name: i.name,
           price: i.price,
           stock: i.stock,
