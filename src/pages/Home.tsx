@@ -6,6 +6,7 @@ import { useLatestProductQuery } from "../redux/api/ProductApi";
 import { addToCart } from "../redux/reducer/cartRedeucer";
 import { cartItem } from "../types/types";
 import Loader from "../components/Loader";
+import Carousel from "../components/Swiper";
 
 const Home = () => {
   const { data, isLoading, isError } = useLatestProductQuery("");
@@ -22,7 +23,9 @@ const Home = () => {
 
   return (
     <div className="home">
-      <section></section>
+      <section>
+        <Carousel />
+      </section>
 
       <h1>
         Latest Products
