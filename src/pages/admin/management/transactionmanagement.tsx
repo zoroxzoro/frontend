@@ -11,7 +11,6 @@ import {
 } from "../../../redux/api/orderApi";
 import { responseToast } from "../../../utils/features";
 import Loader from "../../../components/Loader";
-import { serverr } from "../../../components/ProductCard";
 
 const defaultData: Order = {
   shippingInfo: {
@@ -37,7 +36,7 @@ const TransactionManagement = () => {
     (state: { userReducer: UserReducerInitialState }) => state.userReducer
   );
 
-  const params = useParams();
+  const params = useParams<{ id: string }>();
   const navigate = useNavigate();
 
   const { isLoading, data, isError } = useOrderDetailQuery(params.id!);
@@ -83,22 +82,18 @@ const TransactionManagement = () => {
           <Loader />
         ) : (
           <>
-            <section
-              style={{
-                padding: "2rem",
-              }}
-            >
+            <section style={{ padding: "2rem" }}>
               <h2>Order Items</h2>
 
-              {orderItems.map((i) => (
+              {orderItems.map((item) => (
                 <ProductCard
-                  key={i._id}
-                  name={i.name}
-                  photo={`${serverr}${i.photo}`}
-                  productId={i.productId}
-                  _id={i._id}
-                  quantity={i.quantity}
-                  price={i.price}
+                  key={item._id}
+                  name={item.name}
+                  photo={item.photo} // Pass photo URL from order item
+                  productId={item.productId}
+                  _id={item._id}
+                  quantity={item.quantity}
+                  price={item.price}
                 />
               ))}
             </section>
@@ -155,7 +150,7 @@ const ProductCard = ({
   productId,
 }: OrderItem) => (
   <div className="transaction-product-card">
-    <img src={photo} alt={name} />
+    <img src={photo} alt={name} /> {/* Display the product image */}
     <Link to={`/product/${productId}`}>{name}</Link>
     <span>
       ₹{price} X {quantity} = ₹{price * quantity}
