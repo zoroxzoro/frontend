@@ -1,8 +1,7 @@
 import { Link } from "react-router-dom";
 import { FaTrash } from "react-icons/fa";
-
 import { cartItem } from "../types/types";
-import { serverr } from "./ProductCard";
+import { useGetSingleProductQuery } from "../redux/api/ProductApi";
 
 type CartItemProps = {
   cartItem: cartItem;
@@ -17,11 +16,18 @@ const CartItem = ({
   decrementHandler,
   removeHandler,
 }: CartItemProps) => {
-  const { photo, productId, name, price, quantity } = cartItem;
+  const { productId, name, price, quantity } = cartItem;
+
+  // Fetch product details including photo using productId
+  const { data: product, isLoading } = useGetSingleProductQuery(productId);
+
+  if (isLoading) return <p>Loading...</p>;
+
+  if (!product) return null; // Handle case when product is not found
 
   return (
     <div className="cart-item">
-      <img src={`${serverr}${photo}`} alt={name} />
+      <img src={product.product.photo} alt={name} />
       <article>
         <Link to={`/product/${productId}`}>{name}</Link>
         <span>₹{price}</span>

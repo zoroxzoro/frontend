@@ -9,7 +9,6 @@ import {
   useUpdateProductMutation,
 } from "../../../redux/api/ProductApi";
 import { Navigate, useNavigate, useParams } from "react-router-dom";
-import { serverr } from "../../../components/ProductCard";
 import { responseToast } from "../../../utils/features";
 import Loader from "../../../components/Loader";
 
@@ -23,19 +22,11 @@ const Productmanagement = () => {
 
   const { data, isLoading, isError } = useProductDetailesQuery(params.id!);
 
-  const { price, photo, name, stock, category } = data?.product || {
-    photo: "",
-    category: "",
-    name: "",
-    stock: 0,
-    price: 0,
-  };
-
-  const [priceUpdate, setPriceUpdate] = useState<number>(price);
-  const [stockUpdate, setStockUpdate] = useState<number>(stock);
-  const [nameUpdate, setNameUpdate] = useState<string>(name);
-  const [categoryUpdate, setCategoryUpdate] = useState<string>(category);
-  const [photoUpdate, setPhotoUpdate] = useState<string>("");
+  const [priceUpdate, setPriceUpdate] = useState<number>(0);
+  const [stockUpdate, setStockUpdate] = useState<number>(0);
+  const [nameUpdate, setNameUpdate] = useState<string>("");
+  const [categoryUpdate, setCategoryUpdate] = useState<string>("");
+  const [photoUpdate, setPhotoUpdate] = useState<string | undefined>();
   const [photoFile, setPhotoFile] = useState<File>();
 
   const [updateProduct] = useUpdateProductMutation();
@@ -94,6 +85,7 @@ const Productmanagement = () => {
       setPriceUpdate(data.product.price);
       setStockUpdate(data.product.stock);
       setCategoryUpdate(data.product.category);
+      setPhotoUpdate(data.product.photo); // Set the initial photo URL
     }
   }, [data]);
 
@@ -109,14 +101,15 @@ const Productmanagement = () => {
           <>
             <section>
               <strong>ID - {data?.product._id}</strong>
-              <img src={`${serverr}${photo}`} alt="Product" />
-              <p>{name}</p>
-              {stock > 0 ? (
-                <span className="green">{stock} Available</span>
+              <img src={photoUpdate} alt="Product" />{" "}
+              {/* Display the fetched photo */}
+              <p>{nameUpdate}</p>
+              {stockUpdate > 0 ? (
+                <span className="green">{stockUpdate} Available</span>
               ) : (
                 <span className="red"> Not Available</span>
               )}
-              <h3>₹{price}</h3>
+              <h3>₹{priceUpdate}</h3>
             </section>
             <article>
               <button className="product-delete-btn" onClick={deleteHandler}>
@@ -151,7 +144,6 @@ const Productmanagement = () => {
                     onChange={(e) => setStockUpdate(Number(e.target.value))}
                   />
                 </div>
-
                 <div>
                   <label>Category</label>
                   <input
@@ -161,13 +153,12 @@ const Productmanagement = () => {
                     onChange={(e) => setCategoryUpdate(e.target.value)}
                   />
                 </div>
-
                 <div>
                   <label>Photo</label>
                   <input type="file" onChange={changeImageHandler} />
                 </div>
-
-                {photoUpdate && <img src={photoUpdate} alt="New Image" />}
+                {photoUpdate && <img src={photoUpdate} alt="New Image" />}{" "}
+                {/* Show updated image preview */}
                 <button type="submit">Update</button>
               </form>
             </article>

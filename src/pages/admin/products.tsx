@@ -10,7 +10,6 @@ import { useAllProductQuery } from "../../redux/api/ProductApi";
 import { RootState } from "../../redux/store";
 import { CustomError } from "../../types/api-types";
 import Loader from "../../components/Loader";
-import { serverr } from "../../components/ProductCard";
 
 interface DataType {
   photo: ReactElement;
@@ -45,28 +44,26 @@ const columns: Column<DataType>[] = [
 
 const Products = () => {
   const { user } = useSelector((state: RootState) => state.userReducer);
-
   const { isLoading, isError, error, data } = useAllProductQuery(user?._id!);
-
   const [rows, setRows] = useState<DataType[]>([]);
+
+  useEffect(() => {
+    if (data) {
+      const updatedRows = data.products.map((product) => ({
+        photo: <img src={product.photo} alt={product.name} />,
+        name: product.name,
+        price: product.price,
+        stock: product.stock,
+        action: <Link to={`/admin/product/${product._id}`}>Manage</Link>,
+      }));
+      setRows(updatedRows);
+    }
+  }, [data]);
 
   if (isError) {
     const err = error as CustomError;
     toast.error(err.data.message);
   }
-
-  useEffect(() => {
-    if (data)
-      setRows(
-        data.products.map((i) => ({
-          photo: <img src={`${serverr}${i.photo}`} />,
-          name: i.name,
-          price: i.price,
-          stock: i.stock,
-          action: <Link to={`/admin/product/${i._id}`}>Manage</Link>,
-        }))
-      );
-  }, [data]);
 
   const Table = TableHOC<DataType>(
     columns,

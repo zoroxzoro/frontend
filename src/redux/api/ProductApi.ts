@@ -1,4 +1,4 @@
-import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react"; // Make sure to import from 'react'
+import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 import {
   AllProductsResponse,
   CategoriesResponse,
@@ -12,7 +12,7 @@ import {
 } from "../../types/api-types";
 
 export const ProductApi = createApi({
-  reducerPath: "ProductApi", // Corrected the typo from "UsesrApi" to "UserApi"
+  reducerPath: "ProductApi",
   baseQuery: fetchBaseQuery({
     baseUrl: `${import.meta.env.VITE_SERVER}products/`,
   }),
@@ -40,12 +40,10 @@ export const ProductApi = createApi({
       },
       providesTags: ["product"],
     }),
-
     ProductDetailes: builder.query<ProductResponse, string>({
       query: (id) => id,
       providesTags: ["product"],
     }),
-
     newProduct: builder.mutation<MessageResponse, NewProductRequest>({
       query: ({ formData, id }) => ({
         url: `new?id=${id}`,
@@ -69,6 +67,10 @@ export const ProductApi = createApi({
       }),
       invalidatesTags: ["product"],
     }),
+    getSingleProduct: builder.query<ProductResponse, string>({
+      query: (productId) => `${productId}`, // Adjust the URL pattern as per your backend API
+      providesTags: ["product"],
+    }),
   }),
 });
 
@@ -77,8 +79,9 @@ export const {
   useAllProductQuery,
   useCategoriesQuery,
   useSearchQuery,
-  useNewProductMutation,
   useProductDetailesQuery,
+  useNewProductMutation,
   useUpdateProductMutation,
   useDeleteProductMutation,
+  useGetSingleProductQuery, // Add the useGetSingleProductQuery hook
 } = ProductApi;
