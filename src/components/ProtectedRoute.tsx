@@ -14,11 +14,11 @@ const ProtectedRoute = ({
   children,
   adminOnly,
   admin,
-  redirect = "/",
+  redirect = "/Login",
 }: Props) => {
-  if (!isAuthenticated) return <Navigate to={"/Login"} />;
+  if (!isAuthenticated) return <Navigate to={redirect} />;
 
-  if (adminOnly && !admin) return <Navigate to={"/Login"} />;
+  if (adminOnly && !admin) return <Navigate to={redirect} />;
 
   return children ? children : <Outlet />;
 };
